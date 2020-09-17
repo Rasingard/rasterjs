@@ -56,9 +56,9 @@ export default class Vector3 extends Coordinate3 {
   }
 
   angleTo(x, y, z) {
-    return Math.acos(this.dot(x, y, z));
+    return Math.acos(this.getDot(x, y, z));
   }
   angleToC(vector3) {
-    return Math.acos(this.dotC(vector3));
+    return Math.acos(this.getDotC(vector3));
   }
 }
