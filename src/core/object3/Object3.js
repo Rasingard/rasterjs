@@ -26,8 +26,8 @@ export default class Object3 extends Coordinate3 {
   }
 
   quaternionRotation(quaternion) {
-    quaternion.rotateVector(this.xAxis);
-    quaternion.rotateVector(this.yAxis);
-    quaternion.rotateVector(this.zAxis);
+    quaternion.rotateVector_old(this.xAxis);
+    quaternion.rotateVector_old(this.yAxis);
+    quaternion.rotateVector_old(this.zAxis);
   }
 }

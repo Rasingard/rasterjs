@@ -1,6 +1,16 @@
 import Coordinate3 from "../coordinate/Coordinate3";
 
 export default class Vector3 extends Coordinate3 {
+  static UP = (() => new Vector3(0, 1, 0))();
+  static DOWN = new Vector3(0, -1, 0);
+
+  static LEFT = new Vector3(-1, 0, 0);
+  static RIGHT = new Vector3(1, 0, 0);
+
+  static FORWARD = new Vector3(0, 0, 1);
+  static BACKWARD = new Vector3(0, 0, -1);
+
+
   constructor(x, y, z) {
     super(x, y, z);
   }

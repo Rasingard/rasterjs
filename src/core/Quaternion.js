@@ -91,21 +91,21 @@ export default class Quaternion extends Coordinate4 {
     vector3.set(tempX, tempY, tempZ);
   }
 
-  rotateVector(v) {
+  rotateVector(v) { // Short
     //   2 * dot(u, v) * u
     // + (s*s - dot(u, u)) * v
     // + 2 * s * cross(u, v);
 
     const u = this.getVector3(); // quaternion vector
-    const s = this.getW(); // quaternion scalar
+    const s = this.getW();        // quaternion scalar
 
     const dotUV = u.getDotC(v);
     const dotUU = u.getDotC(u);
     const crossUV = u.getCrossC(v);
 
-    u.multiply(dotUV * 2); // 2 * dot(u, v) * u
+    u.multiply(dotUV * 2);              // 2 * dot(u, v) * u
     v.multiply(Math.pow(s, 2) - dotUU); // (s*s - dot(u, u)) * v
-    crossUV.multiply(2 * s); // 2 * s * cross(u, v)
+    crossUV.multiply(2 * s);            // 2 * s * cross(u, v)
 
     v.addC(crossUV);
   }

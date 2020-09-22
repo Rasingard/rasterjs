@@ -9,6 +9,8 @@ import InputManager from "./InputManager";
 import Object3 from "./object3/Object3";
 import Viewport from "./Viewport";
 import Color from "./Color";
+import Frame from "./Frame";
+import Polygon from "./Polygon";
 
 const _inputManager = new InputManager();
 const _eventsController = new EventsController();
@@ -28,6 +30,7 @@ class Engine {
     let _lastFrameTime = 0;
     let _frameTime = 0;
 
+    const debuggFTime = document.getElementById("FRAME-TIME");
     const debuggFPS = document.getElementById("FPS");
     const debuggTIME = document.getElementById("TIME");
 
@@ -43,6 +46,7 @@ class Engine {
         debugger;
       }
 
+      debuggFTime.innerHTML = _frameTime.toFixed(2);
       debuggFPS.innerHTML = Math.round(1000 / _frameTime);
       debuggTIME.innerHTML = Math.round(_time);
 
@@ -72,5 +76,7 @@ export {
   Matrix4,
   Object3,
   Engine,
-  Color
+  Color,
+  Frame,
+  Polygon
 };

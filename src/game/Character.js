@@ -6,69 +6,84 @@ import Camera from "./Camera";
 export default class Character extends GameObject {
   constructor(x, y, z) {
     super(x, y, z);
-    this.camera = new Camera(this.x, this.y + 10, this.z);
+    this.camera = new Camera(this.x, this.y + 1, this.z);
     this.rotationSpeed = 6 / 100;
     this.baseSpeed = 1 / 200;
 
     // Fix Y overlap
+    /*
     const xRotation = Quaternion.fromAxisAngle(new Vector3(1, 0, 0), 33);
     const rotationM4 = xRotation.rotationM4(this.get());
     const cameraLocation = this.camera.get();
     rotationM4.transform3D(cameraLocation);
     this.camera.setC(cameraLocation);
     this.camera.quaternionRotation(xRotation);
+    */
+
+    const xQuat = Quaternion.fromAxisAngle(Vector3.RIGHT, 270);
+    this.camera.quaternionRotation(xQuat);
 
     this.init();
   }
 
   init() {
     this.EventsController.on("inputphase", inputManager => {
-      let xVariation = 0;
-      let yVariation = 0;
-      let zVariation = 0;
+      let xDelta = 0;
+      let yDelta = 0;
+      let zDelta = 0;
 
-      const xMoviment =
-        inputManager.keyPressed("KeyD") - inputManager.keyPressed("KeyA");
+      const xMoviment = inputManager.keyPressed("KeyD") - inputManager.keyPressed("KeyA");
+      // if (xMoviment) xDelta += xMoviment * this.baseSpeed; // GLOBAL MOVEMENT
 
-      if (xMoviment) xVariation += xMoviment * this.baseSpeed;
-      /*
-      if (xMoviment) {
-        xVariation += this.camera.xAxis.x * xMoviment * this.baseSpeed;
-        yVariation += this.camera.xAxis.y * xMoviment * this.baseSpeed;
-        zVariation += this.camera.xAxis.z * xMoviment * this.baseSpeed;
+      if (xMoviment) { // LOCAL MOVEMENT
+        xDelta += this.camera.xAxis.x * xMoviment * this.baseSpeed;
+        yDelta += this.camera.xAxis.y * xMoviment * this.baseSpeed;
+        zDelta += this.camera.xAxis.z * xMoviment * this.baseSpeed;
       }
-      */
 
-      const zMoviment =
-        inputManager.keyPressed("KeyW") - inputManager.keyPressed("KeyS");
+      const zMoviment = inputManager.keyPressed("KeyW") - inputManager.keyPressed("KeyS");
+      // if (zMoviment) zDelta -=  zMoviment * this.baseSpeed; // GLOBAL MOVEMENT
 
-      if (zMoviment) zVariation -= zMoviment * this.baseSpeed;
-      /*
-      if (zMoviment) {
-        xVariation += this.camera.zAxis.x * zMoviment * this.baseSpeed;
-        yVariation += this.camera.zAxis.y * zMoviment * this.baseSpeed;
-        zVariation += this.camera.zAxis.z * zMoviment * this.baseSpeed;
+      if (zMoviment) { // LOCAL MOVEMENT
+        const lockY = new Vector3(this.camera.zAxis.x, 0, this.camera.zAxis.z);
+        lockY.normalize();
+        xDelta += lockY.x * zMoviment * this.baseSpeed;
+        yDelta += lockY.y * zMoviment * this.baseSpeed;
+        zDelta += lockY.z * zMoviment * this.baseSpeed;
       }
-      */
 
-      /* Move up & down
+
+      const xRotation = inputManager.keyPressed("ArrowDown") - inputManager.keyPressed("ArrowUp"); // INVERTED ROTATION (CAMERA POINTING -Z)
+      if(xRotation) {
+        const xQuat = Quaternion.fromAxisAngle(this.camera.xAxis, xRotation * this.rotationSpeed);
+        this.camera.quaternionRotation(xQuat);
+      }
+
+      const zRotation = inputManager.keyPressed("ArrowRight") - inputManager.keyPressed("ArrowLeft"); // INVERTED ROTATION (CAMERA POINTING -Z)
+      if(zRotation) {
+        const zQuat = Quaternion.fromAxisAngle(Vector3.UP, zRotation * this.rotationSpeed);
+        this.camera.quaternionRotation(zQuat);
+      }
+
+      //
+
+      /* Move up & down*/
       const yMoviment =
         inputManager.keyPressed("Space") -
         inputManager.keyPressed("ControlLeft");
 
       if (yMoviment) {
-        yVariation += this.baseSpeed * yMoviment;
-        yVariation += this.baseSpeed * yMoviment;
+        yDelta += this.baseSpeed * yMoviment;
+        yDelta += this.baseSpeed * yMoviment;
       }
-      */
 
-      this.x += xVariation;
-      this.y += yVariation;
-      this.z += zVariation;
+      this.x += xDelta;
+      this.y += yDelta;
+      this.z += zDelta;
 
-      this.camera.x += xVariation;
-      this.camera.y += yVariation;
-      this.camera.z += zVariation;
+      this.camera.x += xDelta;
+      this.camera.y += yDelta;
+      this.camera.z += zDelta;
 
       /* Camera Rotation relative Character
       const xAxisRotation =

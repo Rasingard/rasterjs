@@ -1,8 +1,9 @@
 export default class Color {
-  static red = new Color(255, 0, 0);
-  static green = new Color(0, 255, 0);
-  static blue = new Color(0, 0, 255);
-  static black = new Color(0, 0, 0);
+  static RED = new Color(255, 0, 0);
+  static GREEN = new Color(0, 255, 0);
+  static BLUE = new Color(0, 0, 255);
+  static BLACK = new Color(0, 0, 0);
+  static WHITE = new Color(255, 255, 255);
 
   constructor(r, g, b) {
     this.r = r;
